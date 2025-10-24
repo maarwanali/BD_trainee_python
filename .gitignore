@@ -1,0 +1,10 @@
+# Ignore virtual environment
+venv/
+
+# Ignore draft notebook
+etl_postgress_draft.ipynb
+
+# Optional: Ignore Python cache and system files
+__pycache__/
+*.pyc
+
