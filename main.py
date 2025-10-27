@@ -1,6 +1,6 @@
 from cli_manager import CLIManager
 
-
+# python main.py --students ./data/students.json --rooms ./data/rooms.json --format json
 
 if __name__ == '__main__' :
 

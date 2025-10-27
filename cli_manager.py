@@ -2,8 +2,8 @@ import argparse
 import sys
 from data_access import DynamicLoader, DBManager
 from services import QueryService
-from reporter import ReportFormatter
-
+from reporter import FormatterFactory
+from writer import WriteToFile
 
 
 class CLIManager:
@@ -15,8 +15,9 @@ class CLIManager:
         self.data_loader = DynamicLoader(self.db_manager)
         self.query_service = QueryService(self.db_manager)
 
-        self.report_formatter = ReportFormatter()
+        self.factory = FormatterFactory()
 
+        self.writer = WriteToFile()
 
         print("CLI initialized ...")
 
@@ -44,6 +45,10 @@ class CLIManager:
             self.data_loader.load_file(args.rooms, table_name='rooms')
             self.data_loader.load_file(args.students, table_name='students')
             
+            #Running Optimization Inx
+
+            self.db_manager.add_optimization_indexes()
+            
             print("\n--- Running Analytics Queries ---")
             # Running all 4 queries
             raw_results = self.query_service.execute_all_analysis()
@@ -54,16 +59,12 @@ class CLIManager:
 
             print(f"\n--- Generating Report ({args.format.upper()}) ---")
             
-            # Format the data using the  ReportFormatter i reporter.py
-            final_report_string = self.report_formatter.format_output(
-                raw_results, 
-                args.format
-            )
 
-            # --- Final Output ---
-            print("\n" + "="*50)
-            print(final_report_string)
-            print("="*50)
+            formatter = self.factory.get_formatter(args.format)
+            final_report_string = formatter.format(raw_results)
+
+            if final_report_string is not None:
+                self.writer.write(final_report_string, args.format)
             
             sys.exit(0) 
 

@@ -48,10 +48,6 @@ class DBManager:
                 conn.close()
 
 
-
-    def execute_analysis_query(self, query:str):
-        return self._execute_transaction(query, fetch=True)
-
     def execute_insert(self, query:sql.SQL, data:list):
         if not data:
             return
@@ -61,6 +57,20 @@ class DBManager:
             return None
         return True
 
+    def execute_analysis_query(self, query:str):
+        return self._execute_transaction(query, fetch=True)
+
+    
+    def add_optimization_indexes(self):
+
+        INDEX_STUDENTS_ROOM = "CREATE INDEX IF NOT EXISTS idx_students_room_id ON students (room);"
+        INDEX_ROOMS_NAME = "CREATE INDEX IF NOT EXISTS idx_rooms_name ON rooms (name);"
+        print("Optimizing tables with indexes...")
+    
+        self._execute_transaction(INDEX_STUDENTS_ROOM)        
+        self._execute_transaction(INDEX_ROOMS_NAME) 
+        
+        print("Indexing complete.")
 
 
 
