@@ -1,6 +1,6 @@
 {
     "report_metadata": {
-        "generation_time": "2025-10-27 09:14:47.704524"
+        "generation_time": "2025-10-30 08:06:27.485162"
     },
     "analysis_results": {
         "count_by_room": [
@@ -4001,26 +4001,26 @@
                 "students_count": 8
             }
         ],
-        "smallest_avg_age": [
+        "smallest_age_avg": [
             {
                 "room_name": "Room #661",
-                "age_age": 12.0
+                "age_avg": 12.0
             },
             {
                 "room_name": "Room #913",
-                "age_age": 20.0
+                "age_avg": 20.0
             },
             {
                 "room_name": "Room #111",
-                "age_age": 32.0
+                "age_avg": 32.0
             },
             {
                 "room_name": "Room #957",
-                "age_age": 33.333333333333336
+                "age_avg": 33.333333333333336
             },
             {
                 "room_name": "Room #773",
-                "age_age": 35.27272727272727
+                "age_avg": 35.27272727272727
             }
         ],
         "largest_age_diff": [

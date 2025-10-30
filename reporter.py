@@ -2,6 +2,9 @@ import json
 import xml.etree.ElementTree as ET
 from abc import ABC, abstractmethod
 from datetime import datetime
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class IFormatter(ABC):
@@ -20,6 +23,7 @@ class FormatterFactory:
     def get_formatter(self, format:str):
         formatter = self._formatters.get(format.lower())
         if not formatter:
+            logger.error("File type not valid")
             raise ValueError("Format type does not correct")
         
         return formatter
@@ -49,7 +53,7 @@ class JsonFormatter(IFormatter):
                     formatted_list.append({"room_name": room_name, "students_count":count})
 
         
-            elif query_name in ("smallest_avg_age", "largest_age_diff"):
+            elif query_name in ("smallest_age_avg", "largest_age_diff"):
                 for room_name, metric_value in data_records:
                     metric_key = query_name.split('_')[-1]
                     formatted_list.append({"room_name": room_name, f"age_{metric_key}": metric_value})
@@ -83,7 +87,7 @@ class XmlFormatter(IFormatter):
                     ET.SubElement(room_elem,'RoomName').text = room_name
                     ET.SubElement(room_elem, 'Count').text= str(count )
 
-            elif query_name in ("smallest_avg_age", "largest_age_diff"):
+            elif query_name in ("smallest_age_avg", "largest_age_diff"):
                 for room_name, metric_value in data_records:
                     room_elem= ET.SubElement(query_group, 'RoomEntry')
                     ET.SubElement(room_elem,"RoomName").text = room_name

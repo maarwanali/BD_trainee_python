@@ -1,13 +1,17 @@
 import json
 import psycopg2 
 from psycopg2 import sql
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 
 class DBManager:
     ''' Handle DB connection, transactions, queries'''
     def __init__(self, db_params:dict ):
         self.db_params = db_params
-        print("DB Manager initialized ...")
+        logger.info("DB Manager initialized ...")
 
 
     def _execute_transaction(self, query:str, data:list =None, fetch:bool = False):
@@ -16,7 +20,6 @@ class DBManager:
         result = None
 
         try:
-
             conn = psycopg2.connect(** self.db_params)
             cur = conn.cursor()
 
@@ -33,15 +36,15 @@ class DBManager:
                 conn.commit()
 
             cur.close()
-            return result
+            return True ,result, cur.rowcount
 
 
         except (Exception, psycopg2.Error) as e:
-            print(f"Error executing Sql Query: {e}")
+            logger.error(f"Error executing Sql Query: {e}")
             if conn :
                 conn.rollback()
 
-            return None
+            return False , None,0
 
         finally:
             if conn is not None:
@@ -50,12 +53,17 @@ class DBManager:
 
     def execute_insert(self, query:sql.SQL, data:list):
         if not data:
-            return
-    
-        success = self._execute_transaction(query = query, data= data)
-        if not success:
             return None
-        return True
+        return self._execute_transaction(query=query, data=data)
+
+        
+        # if not data:
+        #     return
+    
+        # success, result = self._execute_transaction(query = query, data= data)
+        # if not success or not result:
+        #     return None
+        # return True
 
     def execute_analysis_query(self, query:str):
         return self._execute_transaction(query, fetch=True)
@@ -65,12 +73,12 @@ class DBManager:
 
         INDEX_STUDENTS_ROOM = "CREATE INDEX IF NOT EXISTS idx_students_room_id ON students (room);"
         INDEX_ROOMS_NAME = "CREATE INDEX IF NOT EXISTS idx_rooms_name ON rooms (name);"
-        print("Optimizing tables with indexes...")
+        logger.info("Optimizing tables with indexes...")
     
         self._execute_transaction(INDEX_STUDENTS_ROOM)        
         self._execute_transaction(INDEX_ROOMS_NAME) 
         
-        print("Indexing complete.")
+        logger.info("Indexing complete.")
 
 
 
@@ -79,7 +87,7 @@ class DynamicLoader:
 
     def __init__(self, db_manager: DBManager):
         self.db_manager = db_manager
-        print("dynamic loader initialized..")
+        logger.info("dynamic loader initialized..")
 
 
     def _read_json_file(self, filepath:str)->list:
@@ -106,13 +114,18 @@ class DynamicLoader:
         records_to_insert = [tuple(record[col] for col in cols )for record in data_records]
 
         ### LOADING DATA TO DATABASE (DBManager)
-        self.db_manager.execute_insert(insert_query, records_to_insert)
+        return self.db_manager.execute_insert(insert_query, records_to_insert)
 
 
     def load_file(self, filepath:str, table_name:str):
         try:
             records = self._read_json_file(filepath)
-            self._load_records(records, table_name)
-            print(f"Data Successfully loaded to {table_name} & number of records:{len(records)}. ")
+            success, _ ,rowcount = self._load_records(records, table_name)
+            if not success:
+                logger.error("Error occurs while executing Query.")
+            elif success and rowcount == 0:
+                logger.info("Query Success but no affected raws.")
+            elif success and rowcount >0:
+                logger.info(f"Data Successfully loaded to {table_name} & number of records:{len(records)}. ")
         except Exception as e :
-            print(f"postgres error: {e}")
+            logger.error(f"postgres error: {e}")

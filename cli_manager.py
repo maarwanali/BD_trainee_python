@@ -1,25 +1,24 @@
 import argparse
 import sys
 from data_access import DynamicLoader, DBManager
-from services import QueryService
+from query_service import QueryService
 from reporter import FormatterFactory
 from writer import WriteToFile
+import logging
 
+logger = logging.getLogger(__name__)
 
 class CLIManager:
 
     def __init__(self, db_params:dict):
+        logger.info('CLI Manager initialized..')
         self.db_params = db_params
-
         self.db_manager = DBManager(self.db_params)
         self.data_loader = DynamicLoader(self.db_manager)
         self.query_service = QueryService(self.db_manager)
-
         self.factory = FormatterFactory()
-
         self.writer = WriteToFile()
 
-        print("CLI initialized ...")
 
     def _parse_arguments(self):
         parser = argparse.ArgumentParser(
@@ -39,7 +38,7 @@ class CLIManager:
 
         try:
             args = self._parse_arguments()
-            print("--- Starting Data Analysis Pipeline ---")
+            logger.info(" Starting Data Analysis Pipeline ")
 
             #load files to db 'data_access.py' DynamicLoader Class.
             self.data_loader.load_file(args.rooms, table_name='rooms')
@@ -49,15 +48,16 @@ class CLIManager:
 
             self.db_manager.add_optimization_indexes()
             
-            print("\n--- Running Analytics Queries ---")
+            logger.info("Running Analytics Queries ")
             # Running all 4 queries
             raw_results = self.query_service.execute_all_analysis()
 
             # Check for critical errors during query execution
             if any(result is None for result in raw_results.values()):
+                logger.error("One or more analytical queries failed during execution.")
                 raise RuntimeError("One or more analytical queries failed during execution.")
 
-            print(f"\n--- Generating Report ({args.format.upper()}) ---")
+            logger.info(f" Generating Report ({args.format.upper()})")
             
 
             formatter = self.factory.get_formatter(args.format)
@@ -69,5 +69,5 @@ class CLIManager:
             sys.exit(0) 
 
         except Exception as e:
-            print(f"\nERROR: Pipeline failed. Details: {e}", file=sys.stderr)
+            logger.error(f"\nERROR: Pipeline failed. Details: {e}", file=sys.stderr)
             sys.exit(1) # Failure exit code        

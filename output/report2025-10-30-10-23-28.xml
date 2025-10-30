@@ -4000,28 +4000,28 @@
       <Count>8</Count>
     </RoomEntry>
   </countbyroom>
-  <smallestavgage>
+  <smallestageavg>
     <RoomEntry>
       <RoomName>Room #661</RoomName>
-      <AgeValue>12.0</AgeValue>
+      <AvgValue>12.0</AvgValue>
     </RoomEntry>
     <RoomEntry>
       <RoomName>Room #913</RoomName>
-      <AgeValue>20.0</AgeValue>
+      <AvgValue>20.0</AvgValue>
     </RoomEntry>
     <RoomEntry>
       <RoomName>Room #111</RoomName>
-      <AgeValue>32.0</AgeValue>
+      <AvgValue>32.0</AvgValue>
     </RoomEntry>
     <RoomEntry>
       <RoomName>Room #957</RoomName>
-      <AgeValue>33.333333333333336</AgeValue>
+      <AvgValue>33.333333333333336</AvgValue>
     </RoomEntry>
     <RoomEntry>
       <RoomName>Room #773</RoomName>
-      <AgeValue>35.27272727272727</AgeValue>
+      <AvgValue>35.27272727272727</AvgValue>
     </RoomEntry>
-  </smallestavgage>
+  </smallestageavg>
   <largestagediff>
     <RoomEntry>
       <RoomName>Room #395</RoomName>
