@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch, mock_open
-from writer import WriteToFile
+from src.writer import WriteToFile
 
 
 class TestWriteToFile(unittest.TestCase):

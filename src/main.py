@@ -10,14 +10,16 @@ logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 
 if __name__ == '__main__' :
+    load_dotenv()
 
     DB_CONFIG ={
-    "dbname":os.environ.get("DB_NAME","database"),
-    "user":os.environ.get("DB_USER","root"),
-    "password":os.environ.get("DB_PASSWORD","password"),
-    "host": os.environ.get("DB_HOST","localhost"),
-    "port":os.environ.get("DB_PORT","5432")
-    }      
-    logging.info('Starting pipeline')
+    "dbname":os.getenv("DB_NAME"),
+    "user":os.getenv("DB_USER"),
+    "password":os.getenv("DB_PASSWORD"),
+    "host": os.getenv("DB_HOST"),
+    "port":os.getenv("DB_PORT")
+    }   
+
+    logger.info('Starting pipeline')
     manager = CLIManager(DB_CONFIG)
     manager.run()

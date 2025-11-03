@@ -77,7 +77,8 @@ class XmlFormatter(IFormatter):
 
         for query_name, data_records in raws_data.items():
             
-            if data_records is None: continue
+            if data_records is None: 
+                continue
 
             query_group = ET.SubElement(root, query_name.replace('_',''))
 
