@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock
-from query_service import QueryService
-from data_access import DBManager
+from src.query_service import QueryService
+from src.data_access import DBManager
 
 
 

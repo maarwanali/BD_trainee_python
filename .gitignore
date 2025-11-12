@@ -7,4 +7,11 @@ etl_postgress_draft.ipynb
 # Optional: Ignore Python cache and system files
 __pycache__/
 *.pyc
+.ipynb_checkpoints
 
+
+.env
+.env.local
+
+output
+debug

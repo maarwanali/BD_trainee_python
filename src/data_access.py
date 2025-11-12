@@ -18,7 +18,8 @@ class DBManager:
 
         conn = None
         result = None
-
+        rowcount = 0
+        
         try:
             conn = psycopg2.connect(** self.db_params)
             cur = conn.cursor()
@@ -35,8 +36,9 @@ class DBManager:
                 # Only commit if we modified data (no SELECT happened)
                 conn.commit()
 
+            rowcount = cur.rowcount
             cur.close()
-            return True ,result, cur.rowcount
+            return True ,result, rowcount
 
 
         except (Exception, psycopg2.Error) as e:

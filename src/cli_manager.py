@@ -69,5 +69,5 @@ class CLIManager:
             sys.exit(0) 
 
         except Exception as e:
-            logger.error(f"\nERROR: Pipeline failed. Details: {e}", file=sys.stderr)
+            logger.error(f"\nERROR: Pipeline failed. Details: {e}")
             sys.exit(1) # Failure exit code        

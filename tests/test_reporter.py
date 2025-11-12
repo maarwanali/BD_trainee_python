@@ -1,5 +1,5 @@
 import unittest
-from reporter import FormatterFactory, JsonFormatter, XmlFormatter
+from src.reporter import FormatterFactory, JsonFormatter, XmlFormatter
 import json
 import xml.etree.ElementTree as ET
 
